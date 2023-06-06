@@ -1,8 +1,11 @@
 //Henrique Azevedo
 
+import java.util.Comparator;
+import java.util.List;
+
 public class App {
     public static void main(String[] args) {
-        execicio2();
+        execicio1();
     }
 
     public static void execicio1() {
@@ -70,6 +73,14 @@ public class App {
                 { "J", "H" }
         };
 
+        Comparator<List<Integer>> comparator = new Comparator<List<Integer>>() {
+            @Override
+            public int compare(List<Integer> list1, List<Integer> list2) {
+                // Compare the first elements of the lists
+                return list1.get(0).compareTo(list2.get(0));
+            }
+        };
+
         int qtdTestes = Integer.parseInt(input[0][0]);
         for (int idxTeste = 0; idxTeste < qtdTestes; idxTeste++) {
             int qtdVertices = Integer.parseInt(input[1][0]);
@@ -83,7 +94,20 @@ public class App {
             }
 
             System.out.println("#" + (idxTeste + 1));
-            g.printSCCs();
+
+            List<List<Integer>> sccs = g.calculateSCCs();
+            System.out.println("##" + sccs.size());
+
+            sccs.sort(comparator);
+
+            for (List<Integer> scc : sccs) {
+                String linha = "{";
+                for (int vertice : scc) {
+                    linha += idxToChar(vertice) + ",";
+                }
+                linha = linha.substring(0, linha.length() - 1) + "}";
+                System.out.println(linha);
+            }
         }
     }
 
@@ -93,9 +117,5 @@ public class App {
 
     private static int alphabetToIdx(String c) {
         return c.charAt(0) - 'A';
-    }
-
-    private static int charToInt(char c) {
-        return c - '0';
     }
 }
